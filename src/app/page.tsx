@@ -8,10 +8,10 @@ export default function Home() {
   return (
     <main className="flex flex-col grow w-full">
       {/* Seção Hero */}
-      <section className=" bg-orange-50 py-12 w-full text-black">
-        <div className="flex flex-col gap-6 items-center container mx-auto">
-          <h1 className="text-5xl font-bold">Receitas Deliciosas</h1>
-          <p className="text-xl">
+      <section className=" bg-orange-50 py-12 w-full">
+        <div className="flex flex-col gap-6 items-center container mx-auto px-4 text-center">
+          <h1 className="text-3xl sm:text-5xl font-bold">Receitas Deliciosas</h1>
+          <p className="text-base sm:text-xl max-w-md text-zinc-600">
             Descubra receitas simples e deliciosas para todos os gostos.
           </p>
 
@@ -26,10 +26,10 @@ export default function Home() {
 
       {/* Seção de Destaques */}
       <section className="py-12">
-        <div className="flex flex-col items-center container mx-auto gap-8">
-          <h2 className="text-lg font-bold">Receitas em Destaque</h2>
+        <div className="flex flex-col items-center container mx-auto gap-8 px-4">
+          <h2 className="text-2xl font-bold">Receitas em Destaque</h2>
 
-          <div className="flex w-full gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
             {featureRecipes.map((recipe) => (
               <RecipeCard key={recipe.id} recipe={recipe} />
             ))}
