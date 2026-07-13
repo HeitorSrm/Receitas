@@ -48,7 +48,7 @@ export const recipes: Recipe[] = [
         id: "2",
         title: "Risoto de Cogumelos",
         description: "Um risoto cremoso com cogumelos frescos e parmesão, perfeito para um jantar especial.",
-        image: "/receitas/risoto-cogumelos.jpeg",
+        image: "/receitas/risotto-de-cogumelos.jpeg",
         prepTime: "10 minutos",
         cookTime: "30 minutos",
         servings: 4,
