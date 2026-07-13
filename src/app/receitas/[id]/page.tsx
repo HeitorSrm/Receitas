@@ -1,39 +1,62 @@
 import Link from "next/link";
 import Image from "next/image";
+import { recipes } from "@/app/lib/data";
+import { notFound } from "next/navigation";
 
-export default function ReceitasPage() {
+interface RecipesPageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default async function ReceitasPage({ params }: RecipesPageProps) {
+  const { id } = await params;
+  const recipe = recipes.find((recipe) => recipe.id === id);
+
+  if (!recipe) {
+    return notFound();
+  }
+
   return (
     <main className="flex grow py-8">
       <div className="container mx-auto">
         <Link
-          className="flex text-orange-500 hover:text-orange-700 transition-colors"
-          href="receitas"
+          className="flex text-orange-500 hover:text-orange-700 transition-colors mb-6"
+          href="/receitas"
         >
           Voltar para receitas
         </Link>
 
-        <section>
+        <section className="rounded-lg overflow-hidden shadow-md">
           {/* Imagem da receita */}
           <div className="relative h-96 w-full">
-            <Image src="" alt="Título da receita" fill />
+            <Image
+              src={recipe.image}
+              alt={recipe.title}
+              fill
+              className="object-cover rounded-lg"
+            />
           </div>
           {/* Descrição da receita */}
-          <div>
-            <h1>Título da receita</h1>
-            <p>Descrição</p>
+          <div className="flex flex-col gap-6 p-6">
+            <h1 className="text-3xl font-bold">{recipe.title}</h1>
+            <p>{recipe.description}</p>
 
             <div>{/* Componentes de informações */}</div>
 
             {/* Colunas */}
-            <div>
-                #coluna dos ingredientes
-                <div>
-
-                </div>
-                #coluna do modo de preparo
-                <div>
-                    {/* Componente de passo de preparo */}
-                </div>
+            <div className="grid grid-cols-2">
+              <div>
+                <h2 className="text-xl font-bold mb-4">Ingredientes</h2>
+                <ul className="list-disc list-inside space-y-2">
+                  {recipe.ingredients.map((ingredient) => (
+                    <li className="marker:text-orange-500">{ingredient}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold mb-4">Modo de Preparo</h2>
+              </div>
             </div>
           </div>
         </section>
