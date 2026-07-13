@@ -3,6 +3,7 @@ import Image from "next/image";
 import { recipes } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import InfoPill from "@/components/infoPill";
+import PreparationStep from "@/components/PreparationStep";
 
 interface RecipesPageProps {
   params: Promise<{
@@ -56,12 +57,17 @@ export default async function ReceitasPage({ params }: RecipesPageProps) {
                 <h2 className="text-xl font-bold mb-4">Ingredientes</h2>
                 <ul className="list-disc list-inside space-y-2">
                   {recipe.ingredients.map((ingredient) => (
-                    <li className="marker:text-orange-500">{ingredient}</li>
+                    <li key={ingredient} className="marker:text-orange-500">{ingredient}</li>
                   ))}
                 </ul>
               </div>
               <div>
                 <h2 className="text-xl font-bold mb-4">Modo de Preparo</h2>
+                <ol className="space-y-4">
+                  {recipe.instructions.map((instruction, index) => (
+                    <PreparationStep key={instruction} index={index + 1} description={instruction} />
+                  ))}
+                </ol>
               </div>
             </div>
           </div>
