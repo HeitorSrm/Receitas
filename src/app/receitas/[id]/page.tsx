@@ -21,7 +21,7 @@ export default async function ReceitasPage({ params }: RecipesPageProps) {
 
   return (
     <main className="flex grow py-8">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4 max-w-4xl">
         <Link
           className="flex text-orange-500 hover:text-orange-700 transition-colors mb-6"
           href="/receitas"
@@ -31,7 +31,7 @@ export default async function ReceitasPage({ params }: RecipesPageProps) {
 
         <section className="rounded-lg overflow-hidden shadow-md">
           {/* Imagem da receita */}
-          <div className="relative h-96 w-full">
+          <div className="relative h-64 sm:h-96 w-full">
             <Image
               src={recipe.image}
               alt={recipe.title}
@@ -40,11 +40,11 @@ export default async function ReceitasPage({ params }: RecipesPageProps) {
             />
           </div>
           {/* Descrição da receita */}
-          <div className="flex flex-col gap-6 p-6">
-            <h1 className="text-3xl font-bold">{recipe.title}</h1>
+          <div className="flex flex-col gap-6 p-4 sm:p-6">
+            <h1 className="text-2xl sm:text-3xl font-bold">{recipe.title}</h1>
             <p>{recipe.description}</p>
 
-            <div className="flex gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 <InfoPill title="Preparo" info={recipe.prepTime} />
                 <InfoPill title="Cozimento" info={recipe.cookTime} />
                 <InfoPill title="Porções" info={recipe.servings} />
@@ -52,7 +52,7 @@ export default async function ReceitasPage({ params }: RecipesPageProps) {
             </div>
 
             {/* Colunas */}
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
               <div>
                 <h2 className="text-xl font-bold mb-4">Ingredientes</h2>
                 <ul className="list-disc list-inside space-y-2">
