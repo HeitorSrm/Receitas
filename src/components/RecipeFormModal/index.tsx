@@ -3,12 +3,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RecipeFormData, recipeSchema } from "@/lib/formValidationSchemas/recipeSchema";
 import { Recipe } from "@/app/lib/data";
+import { useEffect } from "react";
 
 interface RecipeFormModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSave: (recipe: Omit<Recipe, 'id'>) => void;
-}
+    onSave: (recipe: Omit<Recipe, 'id'> | Recipe) => void;
+    mode: "create" | "edit";
+    recipe?: Recipe;
+} 
 
 const DEFAULT_VALUES: RecipeFormData = {
     title: "",
@@ -22,7 +25,7 @@ const DEFAULT_VALUES: RecipeFormData = {
     instructions: [{ value: "" }]
 };
 
-export default function RecipeFormModal({ isOpen, onClose, onSave }: RecipeFormModalProps) {
+export default function RecipeFormModal({ isOpen, onClose, onSave, mode, recipe }: RecipeFormModalProps) {
     const {
         register,
         reset,
@@ -53,6 +56,21 @@ export default function RecipeFormModal({ isOpen, onClose, onSave }: RecipeFormM
         name: "instructions"
     })
 
+    useEffect(() => {
+        if (isOpen) {
+            if (mode === "edit" && recipe) {
+                reset({
+                    ...recipe,
+                    ingredients: recipe.ingredients.map(ingredient => ({ value: ingredient })),
+                    instructions: recipe.instructions.map(instruction => ({ value: instruction }))
+                });
+            } else {
+                reset(DEFAULT_VALUES);
+            }
+        }
+    }, [isOpen, mode, recipe, reset]);
+
+
     const onSubmit = (data: RecipeFormData) => {
         const recipeData = {
             ...data,
@@ -63,7 +81,7 @@ export default function RecipeFormModal({ isOpen, onClose, onSave }: RecipeFormM
         console.log(recipeData);
         reset();
         onClose();
-        onSave(recipeData);
+        onSave(mode === "edit" && recipe ? { ...recipeData, id: recipe.id } : recipeData);
     }
 
     const inputStyles = "p-2 border border-zinc-200 rounded-md flex-grow w-full";
@@ -72,7 +90,7 @@ export default function RecipeFormModal({ isOpen, onClose, onSave }: RecipeFormM
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="bg-white min-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Nova Receita</DialogTitle>
+                    <DialogTitle>{mode === "create" ? "Nova Receita" : "Editar Receita"}</DialogTitle>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 w-full">
@@ -164,7 +182,7 @@ export default function RecipeFormModal({ isOpen, onClose, onSave }: RecipeFormM
 
                     <div className="flex self-end gap-2">
                         <button type="button" onClick={onClose} className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium">Cancelar</button>
-                        <button type="submit" className="bg-black text-white rounded-md hover:bg-gray-800 transition-colors px-4 py-2 font-medium">Criar receita</button>
+                        <button type="submit" className="bg-black text-white rounded-md hover:bg-gray-800 transition-colors px-4 py-2 font-medium">{mode === "create" ? "Criar receita" : "Salvar alterações" }</button>
                     </div>
                 </form>
             </DialogContent>
