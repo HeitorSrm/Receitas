@@ -52,12 +52,18 @@ export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProp
     })
 
     const onSubmit = (data: RecipeFormData) => {
-        console.log(data);
+        const recipeData = {
+            ...data,
+            ingredients: data.ingredients.map(ingredient => ingredient.value),
+            instructions: data.instructions.map(instruction => instruction.value)
+        }
+
+        console.log(recipeData);
         reset();
         onClose();
     }
 
-    const inputStyles = "p-2 border border-zinc-200 rounded-md flex-grow";
+    const inputStyles = "p-2 border border-zinc-200 rounded-md flex-grow w-full";
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -124,8 +130,10 @@ export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProp
                             {/* Conteúdo */}
                             {ingredientFields.map((field, index) => (
                             <div key={field.id} className="flex gap-2 w-full">
-                                <textarea id="ingredients" className={inputStyles} placeholder="Digite um ingrediente" {...register(`ingredients.${index}.value`)}/>
-                                { ingredientFields.length > 1 && (<button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium h-fit" onClick={() => removeIngredients(index)}>Remover</button> )}
+                                <div className="flex grow">
+                                    <textarea id="ingredients" className={inputStyles} placeholder="Digite um ingrediente" {...register(`ingredients.${index}.value`)}/> {errors.ingredients?.[index]?.value?.message && <span className="text-red-500 text-sm">{errors.ingredients[index]?.value?.message}</span>}
+                                    { ingredientFields.length > 1 && (<button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium h-fit" onClick={() => removeIngredients(index)}>Remover</button> )}
+                                </div>
                             </div>
                             ))}
 
@@ -140,10 +148,12 @@ export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProp
                             {/* Conteúdo */}
                             {instructionFields.map((field, index) => (
                             <div key={field.id} className="flex gap-2 w-full">
-                                <textarea id="instructions" className={inputStyles} placeholder="Digite uma instrução" {...register(`instructions.${index}.value`)}/>
-                                { instructionFields.length > 1 && (<button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium h-fit" onClick={() => removeInstructions(index)}>Remover</button> )}
+                                <div className="flex grow">
+                                    <textarea id="instructions" className={inputStyles} placeholder="Digite uma instrução" {...register(`instructions.${index}.value`)}/> {errors.instructions?.[index]?.value?.message && <span className="text-red-500 text-sm">{errors.instructions[index]?.value?.message}</span>}
+                                    { instructionFields.length > 1 && (<button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium h-fit" onClick={() => removeInstructions(index)}>Remover</button> )}
+                                </div>
                             </div>
-                            ))}
+                            ))} 
 
                             <button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium w-fit" onClick={() => appendInstructions({ value: "" })}>Adicionar instrução</button>
                         </div>
