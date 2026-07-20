@@ -2,17 +2,19 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RecipeFormData, recipeSchema } from "@/lib/formValidationSchemas/recipeSchema";
+import { Recipe } from "@/app/lib/data";
 
 interface RecipeFormModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onSave: (recipe: Omit<Recipe, 'id'>) => void;
 }
 
 const DEFAULT_VALUES: RecipeFormData = {
     title: "",
     category: "",
     description: "",
-    imageUrl: "",
+    image: "",
     prepTime: "",
     cookTime: "",
     servings: 1,
@@ -20,7 +22,7 @@ const DEFAULT_VALUES: RecipeFormData = {
     instructions: [{ value: "" }]
 };
 
-export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProps) {
+export default function RecipeFormModal({ isOpen, onClose, onSave }: RecipeFormModalProps) {
     const {
         register,
         reset,
@@ -61,6 +63,7 @@ export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProp
         console.log(recipeData);
         reset();
         onClose();
+        onSave(recipeData);
     }
 
     const inputStyles = "p-2 border border-zinc-200 rounded-md flex-grow w-full";
@@ -97,9 +100,9 @@ export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProp
 
                     {/* URL da imagem */}
                     <div className="flex flex-col gap-1">
-                        <label htmlFor="imageUrl">URL da imagem</label>
-                        <input className={inputStyles} type="text" id="imageUrl" placeholder="/placeholder.svg?height=400&width=600" {...register("imageUrl")}/>
-                        {errors.imageUrl ? <span className="text-red-500 text-sm">{errors.imageUrl.message}</span> : null}
+                        <label htmlFor="image">URL da imagem</label>
+                        <input className={inputStyles} type="text" id="image" placeholder="/placeholder.svg?height=400&width=600" {...register("image")}/>
+                        {errors.image ? <span className="text-red-500 text-sm">{errors.image.message}</span> : null}
                     </div>
 
                     <div className="grid grid-cols-3 gap-2">

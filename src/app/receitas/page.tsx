@@ -1,13 +1,24 @@
 "use client";
 
 import RecipeCard from "@/components/RecipeCards";
-import {recipes} from "@/app/lib/data";
+import {recipes as initialRecipes} from "@/app/lib/data";
+import type { Recipe } from "@/app/lib/data";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import RecipeFormModal from "@/components/RecipeFormModal";
 
 export default function ReceitasPage() {  
     const [isRecipeModalOpen, setIsRecipeModalOpen] =  useState(false);
+    const [recipes, setRecipes] = useState<Recipe[]>(initialRecipes);
+
+    const handleCreateRecipe = (recipeData: Omit<Recipe, 'id'>) => {
+        const newRecipe: Recipe = {
+            ...recipeData,
+            id: (recipes.length + 1).toString() // Gera um ID simples baseado no tamanho da lista
+        };
+        setRecipes((prev) => [...prev, newRecipe]);
+        setIsRecipeModalOpen(false);
+    }
 
     return (
         <main className="flex grow py-8">
@@ -26,7 +37,7 @@ export default function ReceitasPage() {
                 ))}
                 </div>
             </div>
-            <RecipeFormModal isOpen={isRecipeModalOpen} onClose={() => setIsRecipeModalOpen(false)} />
+            <RecipeFormModal isOpen={isRecipeModalOpen} onClose={() => setIsRecipeModalOpen(false)} onSave={handleCreateRecipe} />
         </main>
     );
 }
