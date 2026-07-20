@@ -25,7 +25,7 @@ export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProp
         onClose();
     }
 
-    const inputStyles = "p-2 border border-zinc-200 rounded-md";
+    const inputStyles = "p-2 border border-zinc-200 rounded-md flex-grow";
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -82,6 +82,34 @@ export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProp
                             <label htmlFor="servings">Porções</label>
                             <input className={inputStyles} type="number" id="servings" defaultValue="1" {...register("servings")}/>
                             {errors.servings ? <span className="text-red-500 text-sm">{errors.servings.message}</span> : null}
+                        </div>
+                    </div>
+
+                    {/* Lista de ingredientes */}
+                    <div className="flex flex-col gap-1">
+                        <label htmlFor="ingredients">Ingredientes</label>
+                        <div className="flex flex-col gap-1">
+                            {/* Conteúdo */}
+                            <div className="flex gap-2 w-full">
+                                <input id="ingredients" type="text" className={inputStyles}/>
+                                <button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium">Remover</button>
+                            </div>
+
+                            <button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium w-fit">Adicionar ingrediente</button>
+                        </div>
+                    </div>
+
+                    {/* Lista de instruções */}
+                    <div className="flex flex-col gap-1">
+                        <label htmlFor="instructions">Instruções</label>
+                        <div className="flex flex-col gap-1">
+                            {/* Conteúdo */}
+                            <div className="flex gap-2 w-full">
+                                <textarea id="instructions" className={inputStyles}/>
+                                <button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium h-fit">Remover</button>
+                            </div>
+
+                            <button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium w-fit">Adicionar instrução</button>
                         </div>
                     </div>
 
