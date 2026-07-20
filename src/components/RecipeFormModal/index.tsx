@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RecipeFormData, recipeSchema } from "@/lib/formValidationSchemas/recipeSchema";
@@ -8,15 +8,47 @@ interface RecipeFormModalProps {
     onClose: () => void;
 }
 
+const DEFAULT_VALUES: RecipeFormData = {
+    title: "",
+    category: "",
+    description: "",
+    imageUrl: "",
+    prepTime: "",
+    cookTime: "",
+    servings: 1,
+    ingredients: [{ value: "" }],
+    instructions: [{ value: "" }]
+};
+
 export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProps) {
     const {
         register,
         reset,
         handleSubmit,
         formState: { errors },
+        control
     } = useForm<RecipeFormData>({
         resolver: yupResolver(recipeSchema),
-        mode: "onSubmit"
+        mode: "onSubmit",
+        defaultValues: DEFAULT_VALUES
+    })
+
+    const {
+        fields: ingredientFields,
+        append: appendIngredients,
+        remove: removeIngredients,
+    } = useFieldArray({
+        control,
+        name: "ingredients"
+    })
+
+    const {
+        fields: instructionFields,
+        append: appendInstructions,
+        remove: removeInstructions,
+    } = useFieldArray({
+        control,
+        name: "instructions"
     })
 
     const onSubmit = (data: RecipeFormData) => {
@@ -29,7 +61,7 @@ export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProp
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="bg-white">
+            <DialogContent className="bg-white min-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Nova Receita</DialogTitle>
                 </DialogHeader>
@@ -80,7 +112,7 @@ export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProp
                         {/* Porções */}
                         <div className="flex flex-col gap-1">
                             <label htmlFor="servings">Porções</label>
-                            <input className={inputStyles} type="number" id="servings" defaultValue="1" {...register("servings")}/>
+                            <textarea className={inputStyles} id="servings" defaultValue="1" {...register("servings")}/>
                             {errors.servings ? <span className="text-red-500 text-sm">{errors.servings.message}</span> : null}
                         </div>
                     </div>
@@ -90,12 +122,14 @@ export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProp
                         <label htmlFor="ingredients">Ingredientes</label>
                         <div className="flex flex-col gap-1">
                             {/* Conteúdo */}
-                            <div className="flex gap-2 w-full">
-                                <input id="ingredients" type="text" className={inputStyles}/>
-                                <button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium">Remover</button>
+                            {ingredientFields.map((field, index) => (
+                            <div key={field.id} className="flex gap-2 w-full">
+                                <textarea id="ingredients" className={inputStyles} placeholder="Digite um ingrediente" {...register(`ingredients.${index}.value`)}/>
+                                { ingredientFields.length > 1 && (<button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium h-fit" onClick={() => removeIngredients(index)}>Remover</button> )}
                             </div>
+                            ))}
 
-                            <button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium w-fit">Adicionar ingrediente</button>
+                            <button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium w-fit" onClick={() => appendIngredients({ value: "" })}>Adicionar ingrediente</button>
                         </div>
                     </div>
 
@@ -104,12 +138,14 @@ export default function RecipeFormModal({ isOpen, onClose }: RecipeFormModalProp
                         <label htmlFor="instructions">Instruções</label>
                         <div className="flex flex-col gap-1">
                             {/* Conteúdo */}
-                            <div className="flex gap-2 w-full">
-                                <textarea id="instructions" className={inputStyles}/>
-                                <button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium h-fit">Remover</button>
+                            {instructionFields.map((field, index) => (
+                            <div key={field.id} className="flex gap-2 w-full">
+                                <textarea id="instructions" className={inputStyles} placeholder="Digite uma instrução" {...register(`instructions.${index}.value`)}/>
+                                { instructionFields.length > 1 && (<button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium h-fit" onClick={() => removeInstructions(index)}>Remover</button> )}
                             </div>
+                            ))}
 
-                            <button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium w-fit">Adicionar instrução</button>
+                            <button type="button" className="bg-white border border-zinc-300 rounded-md hover:bg-gray-100 transition-colors px-4 py-2 font-medium w-fit" onClick={() => appendInstructions({ value: "" })}>Adicionar instrução</button>
                         </div>
                     </div>
 
