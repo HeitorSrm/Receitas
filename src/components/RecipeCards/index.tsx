@@ -42,14 +42,18 @@ const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
 
             <div className="flex gap-2">
               {/* Botão de editar */}
-              <button type="button" onClick={(e) => handleEdit(e)} className="p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer">
-                <Edit size={16}/>
-              </button>
+              {onEdit && (
+                <button type="button" onClick={(e) => handleEdit(e)} className="p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer">
+                  <Edit size={16}/>
+                </button>
+              )}
 
               {/* Botão de excluir */}
-              <button type="button" onClick={(e) => handleDelete(e)} className="p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer">
-                <Trash2 size={16}/>
-              </button>
+              {onDelete && (
+                <button type="button" onClick={(e) => handleDelete(e)} className="p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer">
+                  <Trash2 size={16}/>
+                </button>
+              )}
             </div>
           </div>
         </div>
