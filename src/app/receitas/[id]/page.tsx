@@ -1,9 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { recipes } from "@/app/lib/data";
+import { Recipe } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import InfoPill from "@/components/infoPill";
 import PreparationStep from "@/components/PreparationStep";
+import api from "@/lib/api";
+import { text } from "stream/consumers";
+
 
 interface RecipesPageProps {
   params: Promise<{
@@ -13,7 +16,14 @@ interface RecipesPageProps {
 
 export default async function ReceitasPage({ params }: RecipesPageProps) {
   const { id } = await params;
-  const recipe = recipes.find((recipe) => recipe.id === id);
+  let recipe: Recipe | null = null;
+
+  try {
+    const response = await api.get(`/recipes/${id}`);
+    recipe = response.data;
+  } catch (error) {
+    console.error(`Erro ao buscar a receita com ID ${id}:`, error);
+  }
 
   if (!recipe) {
     return notFound();
@@ -56,17 +66,23 @@ export default async function ReceitasPage({ params }: RecipesPageProps) {
               <div>
                 <h2 className="text-xl font-bold mb-4">Ingredientes</h2>
                 <ul className="list-disc list-inside space-y-2">
-                  {recipe.ingredients.map((ingredient) => (
-                    <li key={ingredient} className="marker:text-orange-500">{ingredient}</li>
-                  ))}
+                  {recipe.ingredients.map((ingredient, index) => {
+                    const text = typeof ingredient === 'string' ? ingredient : ingredient.value;
+                    return (
+                      <li key={index} className="marker:text-orange-500">{text}</li>
+                    );
+                  })}
                 </ul>
               </div>
               <div>
                 <h2 className="text-xl font-bold mb-4">Modo de Preparo</h2>
                 <ol className="space-y-4">
-                  {recipe.instructions.map((instruction, index) => (
-                    <PreparationStep key={instruction} index={index + 1} description={instruction} />
-                  ))}
+                  {recipe.instructions.map((instruction, index) => {
+                    const text = typeof instruction === 'string' ? instruction : instruction.value;
+                    return (
+                      <PreparationStep key={index} index={index + 1} description={text} />
+                    );
+                  })}
                 </ol>
               </div>
             </div>

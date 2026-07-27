@@ -27,7 +27,7 @@ const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     <Link href={`/receitas/${recipe.id}`} className="block h-full">
       <div className="w-full max-w-md mx-auto flex flex-col h-full border border-slate-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
         <div className="relative h-48 w-full">
-          <Image src={recipe.image} alt={recipe.title} fill className="object-cover"/>
+          <img src={recipe.image} alt={recipe.title} className="w-full h-full object-cover"/>
         </div>
         <div className="flex flex-col p-4 gap-6 grow">
           <div className="space-y-2">
@@ -42,14 +42,18 @@ const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
 
             <div className="flex gap-2">
               {/* Botão de editar */}
-              <button type="button" onClick={(e) => handleEdit(e)} className="p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer">
-                <Edit size={16}/>
-              </button>
+              {onEdit && (
+                <button type="button" onClick={(e) => handleEdit(e)} className="p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer">
+                  <Edit size={16}/>
+                </button>
+              )}
 
               {/* Botão de excluir */}
-              <button type="button" onClick={(e) => handleDelete(e)} className="p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer">
-                <Trash2 size={16}/>
-              </button>
+              {onDelete && (
+                <button type="button" onClick={(e) => handleDelete(e)} className="p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer">
+                  <Trash2 size={16}/>
+                </button>
+              )}
             </div>
           </div>
         </div>
