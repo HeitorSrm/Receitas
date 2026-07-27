@@ -27,7 +27,7 @@ const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     <Link href={`/receitas/${recipe.id}`} className="block h-full">
       <div className="w-full max-w-md mx-auto flex flex-col h-full border border-slate-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
         <div className="relative h-48 w-full">
-          <Image src={recipe.image} alt={recipe.title} fill className="object-cover"/>
+          <img src={recipe.image} alt={recipe.title} className="w-full h-full object-cover"/>
         </div>
         <div className="flex flex-col p-4 gap-6 grow">
           <div className="space-y-2">
