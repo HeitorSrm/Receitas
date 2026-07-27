@@ -54,12 +54,13 @@ export default function ReceitasPage() {
             setRecipes((prev) => [...prev, newRecipe]);
         } else {
             const updatedRecipe = recipeData as Recipe;
-            setRecipes((prev) => prev.map((recipe) => (recipe.id === updatedRecipe.id ? updatedRecipe : recipe))
+            const response = await api.put(`/recipes/${updatedRecipe.id}`, updatedRecipe);
+            setRecipes((prev) => prev.map((recipe) => (recipe.id === updatedRecipe.id ? response.data : recipe))
             );
         }
         handleCloseModal();
         } catch (error) {
-            console.error("Erro ao salvar receita:", error);
+            console.error(`Erro ao ${modalMode === "create" ? "criar" : "editar"} a receita:`, error);
         }
     }
 

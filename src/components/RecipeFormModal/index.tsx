@@ -61,8 +61,8 @@ export default function RecipeFormModal({ isOpen, onClose, onSave, mode, recipe 
             if (mode === "edit" && recipe) {
                 reset({
                     ...recipe,
-                    ingredients: recipe.ingredients.map(ingredient => ({ value: ingredient })),
-                    instructions: recipe.instructions.map(instruction => ({ value: instruction }))
+                    ingredients: recipe.ingredients.map(ingredient => ({ value: ingredient.value })),
+                    instructions: recipe.instructions.map(instruction => ({ value: instruction.value }))
                 });
             } else {
                 reset(DEFAULT_VALUES);
@@ -72,16 +72,9 @@ export default function RecipeFormModal({ isOpen, onClose, onSave, mode, recipe 
 
 
     const onSubmit = (data: RecipeFormData) => {
-        const recipeData = {
-            ...data,
-            ingredients: data.ingredients.map(ingredient => ingredient.value),
-            instructions: data.instructions.map(instruction => instruction.value)
-        }
-
-        console.log(recipeData);
         reset();
         onClose();
-        onSave(mode === "edit" && recipe ? { ...recipeData, id: recipe.id } : recipeData);
+        onSave(mode === "edit" && recipe ? { ...data, id: recipe.id } : data);
     }
 
     const inputStyles = "p-2 border border-zinc-200 rounded-md flex-grow w-full";
