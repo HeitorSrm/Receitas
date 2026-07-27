@@ -33,18 +33,18 @@ export default function ReceitasPage() {
         setModalMode("create");
         setSelectedRecipe(undefined);
         setIsRecipeModalOpen(true);
-    }
+    };
 
     const handleOpenEditModal = (recipe: Recipe) => {
         setModalMode("edit");
         setSelectedRecipe(recipe);
         setIsRecipeModalOpen(true);
-    }
+    };
 
     const handleCloseModal = () => {
         setIsRecipeModalOpen(false);
         setSelectedRecipe(undefined);
-    }
+    };
 
     const handleSaveRecipe = async (recipeData: Omit<Recipe, 'id'> | Recipe) => {
         try {
@@ -62,20 +62,26 @@ export default function ReceitasPage() {
         } catch (error) {
             console.error(`Erro ao ${modalMode === "create" ? "criar" : "editar"} a receita:`, error);
         }
-    }
+    };
 
     const handleOpenDeleteConfirmationModal = (recipe: Recipe) => {
         setSelectedRecipe(recipe);
         setIsDeleteConfirmationModalOpen(true);
-    }
+    };
 
-    const handleDeleteRecipe = () => {
-        if (selectedRecipe) {
-            setRecipes((prev) => prev.filter((recipe) => recipe.id !== selectedRecipe.id));
-            setIsDeleteConfirmationModalOpen(false);
-            setSelectedRecipe(undefined);
+    const handleDeleteRecipe = async () => {
+        try{
+            if (selectedRecipe) {
+                await api.delete(`/recipes/${selectedRecipe.id}`);
+                setRecipes((prev) => prev.filter((recipe) => recipe.id !== selectedRecipe.id));
+                setIsDeleteConfirmationModalOpen(false);
+                setSelectedRecipe(undefined);
+            }
+        } catch (error) {
+            console.error("Erro ao deletar a receita:", error);
         }
-    }
+        
+    };
 
     return (
         <main className="flex grow py-8">
