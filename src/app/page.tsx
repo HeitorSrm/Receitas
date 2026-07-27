@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { recipes } from "./lib/data";
+import { Recipe } from "./lib/data";
 import RecipeCard from "@/components/RecipeCards";
+import api from "@/lib/api";
 
-export default function Home() {
+export default async function Home() {
+  const response = await api.get("/recipes");
+  const recipes: Recipe[] = response.data;
   const featureRecipes = recipes.slice(0, 3);
 
   return (
