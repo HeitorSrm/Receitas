@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import RecipeFormModal from "@/components/RecipeFormModal";
 import DeleteConfirmationModal from "@/components/DeleteConfirmationModal";
 import api from "@/lib/api";
+import { toast } from "sonner";
 
 export default function ReceitasPage() {  
     const [isRecipeModalOpen, setIsRecipeModalOpen] =  useState(false);
@@ -16,13 +17,13 @@ export default function ReceitasPage() {
     const [selectedRecipe, setSelectedRecipe] = useState<Recipe | undefined >(undefined);
 
     useEffect(() => {
-        console.log("Entrou no useEffect");
         const fetchRecipes = async () => {
             try {
                 const response = await api.get("/recipes");
                 setRecipes(response.data);
             } catch (error) {
                 console.error("Erro ao buscar receitas:", error);
+                toast.error("Erro ao requisitar as receitas, servidor offline ou indisponível.");
             }
         };
 
@@ -52,15 +53,18 @@ export default function ReceitasPage() {
             const response = await api.post("/recipes", recipeData);
             const newRecipe = response.data;
             setRecipes((prev) => [...prev, newRecipe]);
+            toast.success("Receita criada com sucesso!");
         } else {
             const updatedRecipe = recipeData as Recipe;
             const response = await api.put(`/recipes/${updatedRecipe.id}`, updatedRecipe);
             setRecipes((prev) => prev.map((recipe) => (recipe.id === updatedRecipe.id ? response.data : recipe))
             );
+            toast.success("Receita editada com sucesso!");
         }
         handleCloseModal();
         } catch (error) {
             console.error(`Erro ao ${modalMode === "create" ? "criar" : "editar"} a receita:`, error);
+            toast.error(`Erro ao ${modalMode === "create" ? "criar" : "editar"} a receita.`); 
         }
     };
 
@@ -77,8 +81,10 @@ export default function ReceitasPage() {
                 setIsDeleteConfirmationModalOpen(false);
                 setSelectedRecipe(undefined);
             }
+            toast.success("Receita deletada com sucesso!");
         } catch (error) {
             console.error("Erro ao deletar a receita:", error);
+            toast.error("Erro ao deletar a receita.");
         }
         
     };
